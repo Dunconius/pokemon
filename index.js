@@ -1,4 +1,5 @@
 require('dotenv').config();
+const { CustomFancyError } = require('./cutsomerror');
 const pokemonPrintFile = require("./pokemonPrint");
 const {pokemonNameFromNumber} = require('./pokemonPrint')
 
@@ -16,7 +17,8 @@ function app() {
         let n = parseFloat(prompt("What number of pokemon do you want to see?"));
         
         if (Number.isNaN(n)) {
-            throw new Error("User did not enter a number!!!");
+            // throw new Error("User did not enter a number!!!");
+            throw new CustomFancyError("Custom error for NaN!")
         }
 
         try {
@@ -25,18 +27,19 @@ function app() {
             
         } catch (error) {
             console.log('Try a number between 1 - 1025');
+        } finally {
+            let userInputToExit = prompt("Would you like to try again?");
+    
+            if (userInputToExit == "y") {
+                userWantsToExit = false;
+            } else {
+                userWantsToExit = true;
+            }
         }
         
         
         // console.log('You entered: ' + n);
 
-        let userInputToExit = prompt("Would you like to try again?");
-
-        if (userInputToExit == "y") {
-            userWantsToExit = false;
-        } else {
-            userWantsToExit = true;
-        }
 
     } while (userWantsToExit == false);
 }
@@ -46,6 +49,7 @@ try {
 } catch (error) {
     console.log('Gracefully shutting down...');
     console.log(error.message);
+    console.log(JSON.stringify(error));
 }
 
 // console.log("Terminal app is running");
